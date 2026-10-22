@@ -23,4 +23,6 @@ public class TipoAcessoService {
     public List<TipoAcesso> findAll() {
         return tipoAcessoRepository.findAll();
     }
+
+    public void deleteById(int id) { tipoAcessoRepository.deleteById(id); }
 }

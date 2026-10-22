@@ -1,0 +1,152 @@
+
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Tipos de Acesso | Meu Sistema</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<header class="cabecalho">
+    <div class="container menu">
+        <a th:href="@{/}" class="logo">Meu Sistema</a>
+
+        <nav>
+            <a th:href="@{/}" class="link-menu">Início</a>
+            <a th:href="@{/#cadastros}" class="link-menu">Cadastros</a>
+            <a th:href="@{/telas/tipos-acesso}" class="link-menu ativo">
+                Tipos de acesso
+            </a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+
+    <section class="apresentacao">
+        <span class="etiqueta">GERENCIAMENTO</span>
+
+        <h1>Tipos de acesso</h1>
+
+        <p>
+            Cadastre, consulte, edite e exclua os tipos de acesso
+            disponíveis no sistema.
+        </p>
+    </section>
+
+    <section class="painel-formulario">
+
+        <div class="titulo-secao">
+            <div>
+                <h2>Novo tipo de acesso</h2>
+                <p>Preencha a descrição para cadastrar um novo registro.</p>
+            </div>
+        </div>
+
+        <form th:action="@{/telas/tipos-acesso/salvar}"
+              method="post"
+              class="formulario">
+
+            <div class="campo">
+                <label for="descricao">Descrição</label>
+
+                <input
+                        type="text"
+                        id="descricao"
+                        name="descricao"
+                        placeholder="Ex.: Administrador"
+                        maxlength="100"
+                        required>
+            </div>
+
+            <div class="acoes-formulario">
+                <button type="submit" class="botao">
+                    Cadastrar
+                </button>
+
+                <button type="reset" class="botao botao-secundario">
+                    Limpar
+                </button>
+            </div>
+
+        </form>
+    </section>
+
+    <section class="painel-tabela">
+
+        <div class="titulo-secao">
+            <div>
+                <h2>Tipos cadastrados</h2>
+                <p>Lista de tipos de acesso registrados no sistema.</p>
+            </div>
+        </div>
+
+        <div class="tabela-responsiva">
+            <table class="tabela">
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Descrição</th>
+                    <th>Ações</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <tr th:each="tipo : ${tiposAcesso}">
+                    <td th:text="${tipo.id}">1</td>
+
+                    <td th:text="${tipo.descricao}">
+                        Administrador
+                    </td>
+
+                    <td class="acoes-tabela">
+                        <a
+                                th:href="@{/telas/tipos-acesso/editar/{id}(id=${tipo.id})}"
+                                class="botao botao-editar">
+                            Editar
+                        </a>
+
+                        <form
+                                th:action="@{/telas/tipos-acesso/excluir/{id}(id=${tipo.id})}"
+                                method="post"
+                                class="form-excluir">
+
+                            <button
+                                    type="submit"
+                                    class="botao botao-excluir">
+                                Excluir
+                            </button>
+
+                        </form>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(tiposAcesso)}">
+                    <td colspan="3" class="mensagem-vazia">
+                        Nenhum tipo de acesso cadastrado.
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+    </section>
+
+    <div class="voltar">
+        <a th:href="@{/}" class="link-voltar">
+            ← Voltar para a página inicial
+        </a>
+    </div>
+
+</main>
+
+<footer class="rodape">
+    <p>Meu Sistema · Projeto de estudos</p>
+</footer>
+
+</body>
+</html>

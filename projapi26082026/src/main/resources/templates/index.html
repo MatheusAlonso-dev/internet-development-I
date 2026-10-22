@@ -1,0 +1,124 @@
+
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Meu Sistema</title>
+
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+<body>
+
+<header class="cabecalho">
+    <div class="container menu">
+        <a href="/" class="logo">Meu Sistema</a>
+
+        <nav>
+            <a href="/" class="link-menu ativo">Início</a>
+            <a href="#cadastros" class="link-menu">Cadastros</a>
+            <a href="#sobre" class="link-menu">Sobre</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+
+    <section class="apresentacao">
+        <span class="etiqueta">PAINEL ADMINISTRATIVO</span>
+
+        <h1>Bem-vindo ao sistema</h1>
+
+        <p>
+            Gerencie os cadastros do sistema em um só lugar.
+            Selecione uma das opções abaixo para começar.
+        </p>
+    </section>
+
+    <section id="cadastros" class="secao-cadastros">
+
+        <div class="titulo-secao">
+            <div>
+                <h2>Cadastros</h2>
+                <p>Escolha o módulo que deseja acessar.</p>
+            </div>
+
+            <span class="contador">6 módulos</span>
+        </div>
+
+        <div class="grade-cadastros">
+
+            <article class="cartao">
+                <div class="icone">AG</div>
+                <h3>Agendas</h3>
+                <p>Gerencie os agendamentos e suas informações.</p>
+                <a th:href="@{/telas/agendas}" class="botao">
+                    Acessar cadastro
+                </a>
+            </article>
+
+            <article class="cartao">
+                <div class="icone">CL</div>
+                <h3>Clientes</h3>
+                <p>Consulte e cadastre os clientes do sistema.</p>
+                <a th:href="@{/telas/clientes}" class="botao">
+                    Acessar cadastro
+                </a>
+            </article>
+
+            <article class="cartao">
+                <div class="icone">EN</div>
+                <h3>Endereços</h3>
+                <p>Gerencie os endereços cadastrados.</p>
+                <a th:href="@{/telas/enderecos}" class="botao">
+                    Acessar cadastro
+                </a>
+            </article>
+
+            <article class="cartao">
+                <div class="icone">SV</div>
+                <h3>Serviços</h3>
+                <p>Consulte os serviços e seus respectivos valores.</p>
+                <a th:href="@{/telas/servicos}" class="botao">
+                    Acessar cadastro
+                </a>
+            </article>
+
+            <article class="cartao">
+                <div class="icone">US</div>
+                <h3>Usuários</h3>
+                <p>Gerencie os usuários registrados no sistema.</p>
+                <a th:href="@{/telas/usuarios}" class="botao">
+                    Acessar cadastro
+                </a>
+            </article>
+
+            <article class="cartao">
+                <div class="icone">TA</div>
+                <h3>Tipos de acesso</h3>
+                <p>Gerencie os tipos de acesso disponíveis.</p>
+                <a th:href="@{/telas/tipos-acesso}" class="botao">
+                    Acessar cadastro
+                </a>
+            </article>
+
+        </div>
+    </section>
+
+    <section id="sobre" class="sobre">
+        <h2>Sobre o projeto</h2>
+        <p>
+            Projeto desenvolvido para praticar Java, Spring Boot,
+            Thymeleaf, integração com banco de dados H2 e operações CRUD.
+        </p>
+    </section>
+
+</main>
+
+<footer class="rodape">
+    <p>Meu Sistema · Projeto de estudos</p>
+</footer>
+
+</body>
+</html>

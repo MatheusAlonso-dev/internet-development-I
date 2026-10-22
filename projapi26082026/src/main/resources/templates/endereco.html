@@ -1,0 +1,222 @@
+```html
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Endereços | Meu Sistema</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<header class="cabecalho">
+    <div class="container menu">
+        <a th:href="@{/}" class="logo">Meu Sistema</a>
+
+        <nav>
+            <a th:href="@{/}" class="link-menu">Início</a>
+            <a th:href="@{/#cadastros}" class="link-menu">Cadastros</a>
+            <a th:href="@{/telas/enderecos}" class="link-menu ativo">Endereços</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+
+    <section class="apresentacao">
+        <span class="etiqueta">Cadastros</span>
+        <h1>Endereços</h1>
+        <p>
+            Cadastre, consulte, edite e exclua os endereços registrados no sistema.
+        </p>
+    </section>
+
+    <div
+            th:if="${mensagem}"
+            class="mensagem-sucesso"
+            th:text="${mensagem}">
+    </div>
+
+    <section class="painel-formulario">
+        <div class="titulo-secao">
+            <h2>Novo endereço</h2>
+            <p>Preencha os campos abaixo para cadastrar um endereço.</p>
+        </div>
+
+        <form
+                th:action="@{/telas/enderecos/salvar}"
+                method="post"
+                class="formulario">
+
+            <div class="campo">
+                <label for="logradouro">Logradouro</label>
+                <input
+                        type="text"
+                        id="logradouro"
+                        name="logradouro"
+                        placeholder="Ex.: Rua das Flores"
+                        required>
+            </div>
+
+            <div class="campo">
+                <label for="numero">Número</label>
+                <input
+                        type="number"
+                        id="numero"
+                        name="numero"
+                        placeholder="Ex.: 123"
+                        required>
+            </div>
+
+            <div class="campo">
+                <label for="complemento">Complemento</label>
+                <input
+                        type="text"
+                        id="complemento"
+                        name="complemento"
+                        placeholder="Ex.: Apartamento 12">
+            </div>
+
+            <div class="campo">
+                <label for="cep">CEP</label>
+                <input
+                        type="text"
+                        id="cep"
+                        name="cep"
+                        placeholder="Ex.: 14800-000"
+                        required>
+            </div>
+
+            <div class="campo">
+                <label for="cidade">Cidade</label>
+                <input
+                        type="text"
+                        id="cidade"
+                        name="cidade"
+                        placeholder="Ex.: Araraquara"
+                        required>
+            </div>
+
+            <div class="campo">
+                <label for="estado">Estado</label>
+                <input
+                        type="text"
+                        id="estado"
+                        name="estado"
+                        placeholder="Ex.: São Paulo"
+                        required>
+            </div>
+
+            <div class="campo">
+                <label for="uf">UF</label>
+                <input
+                        type="text"
+                        id="uf"
+                        name="uf"
+                        placeholder="Ex.: SP"
+                        maxlength="2"
+                        required>
+            </div>
+
+            <div class="acoes-formulario">
+                <button type="submit" class="botao">
+                    Cadastrar endereço
+                </button>
+
+                <button
+                        type="reset"
+                        class="botao botao-secundario">
+                    Limpar
+                </button>
+            </div>
+
+        </form>
+    </section>
+
+    <section class="painel-tabela">
+        <div class="titulo-secao">
+            <h2>Endereços cadastrados</h2>
+            <p>Lista de endereços registrados no sistema.</p>
+        </div>
+
+        <div class="tabela-responsiva">
+            <table class="tabela">
+
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Logradouro</th>
+                    <th>Número</th>
+                    <th>Complemento</th>
+                    <th>CEP</th>
+                    <th>Cidade</th>
+                    <th>Estado</th>
+                    <th>UF</th>
+                    <th>Ações</th>
+                </tr>
+                </thead>
+
+                <tbody>
+
+                <tr th:each="endereco : ${enderecos}">
+                    <td th:text="${endereco.id}">1</td>
+                    <td th:text="${endereco.logradouro}">Rua das Flores</td>
+                    <td th:text="${endereco.numero}">123</td>
+                    <td th:text="${endereco.complemento}">Apartamento 12</td>
+                    <td th:text="${endereco.cep}">14800-000</td>
+                    <td th:text="${endereco.cidade}">Araraquara</td>
+                    <td th:text="${endereco.estado}">São Paulo</td>
+                    <td th:text="${endereco.uf}">SP</td>
+
+                    <td class="acoes-tabela">
+                        <a
+                                th:href="@{/telas/enderecos/editar/{id}(id=${endereco.id})}"
+                                class="botao botao-editar">
+                            Editar
+                        </a>
+
+                        <form
+                                th:action="@{/telas/enderecos/excluir/{id}(id=${endereco.id})}"
+                                method="post"
+                                class="form-excluir">
+
+                            <button
+                                    type="submit"
+                                    class="botao botao-excluir">
+                                Excluir
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+
+                <tr th:if="${#lists.isEmpty(enderecos)}">
+                    <td colspan="9" class="mensagem-vazia">
+                        Nenhum endereço cadastrado.
+                    </td>
+                </tr>
+
+                </tbody>
+
+            </table>
+        </div>
+    </section>
+
+    <div class="voltar">
+        <a th:href="@{/}" class="link-voltar">
+            ← Voltar para a página inicial
+        </a>
+    </div>
+
+</main>
+
+<footer class="rodape">
+    <div class="container">
+        <p>Meu Sistema — Gerenciamento de cadastros</p>
+    </div>
+</footer>
+
+</body>
+</html>
+```
