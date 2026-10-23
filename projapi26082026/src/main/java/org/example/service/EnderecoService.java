@@ -6,6 +6,7 @@ import org.example.repository.EnderecoRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class EnderecoService {
@@ -20,7 +21,19 @@ public class EnderecoService {
         return enderecoRepository.save(endereco);
     }
 
+    public Endereco atualizar(Endereco endereco) {
+        return enderecoRepository.save(endereco);
+    }
+
     public List<Endereco> findAll() {
         return enderecoRepository.findAll();
+    }
+
+    public Endereco findById(int id) {
+        return enderecoRepository.findById(id).orElse(null);
+    }
+
+    public void deleteById(int id) {
+        enderecoRepository.deleteById(id);
     }
 }

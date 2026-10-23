@@ -1,10 +1,9 @@
-```html
+
 <!DOCTYPE html>
 <html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Endereços | Meu Sistema</title>
     <link rel="stylesheet" th:href="@{/css/style.css}">
 </head>
@@ -46,7 +45,9 @@
         </div>
 
         <form
-                th:action="@{/telas/enderecos/salvar}"
+                th:action="${editando} ?
+                @{/telas/enderecos/atualizar/{id}(id=${enderecoEditar.id})} :
+                @{/telas/enderecos/salvar}"
                 method="post"
                 class="formulario">
 
@@ -57,6 +58,7 @@
                         id="logradouro"
                         name="logradouro"
                         placeholder="Ex.: Rua das Flores"
+                        th:value="${editando} ? ${enderecoEditar.logradouro} : ''"
                         required>
             </div>
 
@@ -67,6 +69,7 @@
                         id="numero"
                         name="numero"
                         placeholder="Ex.: 123"
+                        th:value="${editando} ? ${enderecoEditar.numero} : ''"
                         required>
             </div>
 
@@ -76,7 +79,9 @@
                         type="text"
                         id="complemento"
                         name="complemento"
-                        placeholder="Ex.: Apartamento 12">
+                        placeholder="Ex.: Apartamento 12"
+                        th:value="${editando} ? ${enderecoEditar.complemento} : ''">
+
             </div>
 
             <div class="campo">
@@ -86,6 +91,7 @@
                         id="cep"
                         name="cep"
                         placeholder="Ex.: 14800-000"
+                        th:value="${editando} ? ${enderecoEditar.cep} : ''"
                         required>
             </div>
 
@@ -96,6 +102,7 @@
                         id="cidade"
                         name="cidade"
                         placeholder="Ex.: Araraquara"
+                        th:value="${editando} ? ${enderecoEditar.cidade} : ''"
                         required>
             </div>
 
@@ -106,6 +113,7 @@
                         id="estado"
                         name="estado"
                         placeholder="Ex.: São Paulo"
+                        th:value="${editando} ? ${enderecoEditar.estado} : ''"
                         required>
             </div>
 
@@ -117,6 +125,7 @@
                         name="uf"
                         placeholder="Ex.: SP"
                         maxlength="2"
+                        th:value="${editando} ? ${enderecoEditar.uf} : ''"
                         required>
             </div>
 
@@ -141,36 +150,48 @@
             <p>Lista de endereços registrados no sistema.</p>
         </div>
 
-        <div class="tabela-responsiva">
-            <table class="tabela">
+        <table class="tabela">
 
-                <thead>
-                <tr>
-                    <th>ID</th>
-                    <th>Logradouro</th>
-                    <th>Número</th>
-                    <th>Complemento</th>
-                    <th>CEP</th>
-                    <th>Cidade</th>
-                    <th>Estado</th>
-                    <th>UF</th>
-                    <th>Ações</th>
-                </tr>
-                </thead>
+            <colgroup>
+                <col style="width: 6%">
+                <col style="width: 19%">
+                <col style="width: 8%">
+                <col style="width: 13%">
+                <col style="width: 10%">
+                <col style="width: 12%">
+                <col style="width: 10%">
+                <col style="width: 6%">
+                <col style="width: 16%">
+            </colgroup>
 
-                <tbody>
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Logradouro</th>
+                <th>Número</th>
+                <th>Complemento</th>
+                <th>CEP</th>
+                <th>Cidade</th>
+                <th>Estado</th>
+                <th>UF</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
 
-                <tr th:each="endereco : ${enderecos}">
-                    <td th:text="${endereco.id}">1</td>
-                    <td th:text="${endereco.logradouro}">Rua das Flores</td>
-                    <td th:text="${endereco.numero}">123</td>
-                    <td th:text="${endereco.complemento}">Apartamento 12</td>
-                    <td th:text="${endereco.cep}">14800-000</td>
-                    <td th:text="${endereco.cidade}">Araraquara</td>
-                    <td th:text="${endereco.estado}">São Paulo</td>
-                    <td th:text="${endereco.uf}">SP</td>
+            <tbody>
 
-                    <td class="acoes-tabela">
+            <tr th:each="endereco : ${enderecos}">
+                <td th:text="${endereco.id}">1</td>
+                <td th:text="${endereco.logradouro}">Rua das Flores</td>
+                <td th:text="${endereco.numero}">123</td>
+                <td th:text="${endereco.complemento}">Apartamento 12</td>
+                <td th:text="${endereco.cep}">14800-000</td>
+                <td th:text="${endereco.cidade}">Araraquara</td>
+                <td th:text="${endereco.estado}">São Paulo</td>
+                <td th:text="${endereco.uf}">SP</td>
+
+                <td>
+                    <div class="acoes-tabela">
                         <a
                                 th:href="@{/telas/enderecos/editar/{id}(id=${endereco.id})}"
                                 class="botao botao-editar">
@@ -188,19 +209,18 @@
                                 Excluir
                             </button>
                         </form>
-                    </td>
-                </tr>
+                    </div>
+                </td>
+            </tr>
 
-                <tr th:if="${#lists.isEmpty(enderecos)}">
-                    <td colspan="9" class="mensagem-vazia">
-                        Nenhum endereço cadastrado.
-                    </td>
-                </tr>
+            <tr th:if="${#lists.isEmpty(enderecos)}">
+                <td colspan="9" class="mensagem-vazia">
+                    Nenhum endereço cadastrado.
+                </td>
+            </tr>
 
-                </tbody>
-
-            </table>
-        </div>
+            </tbody>
+        </table>
     </section>
 
     <div class="voltar">
@@ -219,4 +239,3 @@
 
 </body>
 </html>
-```
