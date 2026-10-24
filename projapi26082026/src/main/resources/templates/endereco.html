@@ -40,8 +40,8 @@
 
     <section class="painel-formulario">
         <div class="titulo-secao">
-            <h2>Novo endereço</h2>
-            <p>Preencha os campos abaixo para cadastrar um endereço.</p>
+            <h2 th:text="${editando} ? 'Editar endereço' : 'Novo endereço'">Novo endereço</h2>
+            <p th:if="${editando}">Preencha os campos abaixo para editar o endereço.</p>
         </div>
 
         <form
@@ -130,11 +130,13 @@
             </div>
 
             <div class="acoes-formulario">
-                <button type="submit" class="botao">
+                <button type="submit" class="botao" th:text="${editando} ? 'Atualizar endereço' : 'Cadastrar endereço'">
                     Cadastrar endereço
                 </button>
 
-                <button
+                <a th:if="${editando}" th:href="@{/telas/enderecos}" class="botao botao-secundario" >Cancelar</a>
+                
+                <button th:if="${!editando}"
                         type="reset"
                         class="botao botao-secundario">
                     Limpar
