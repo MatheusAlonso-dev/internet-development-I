@@ -25,4 +25,6 @@ public class TipoAcessoService {
     }
 
     public void deleteById(int id) { tipoAcessoRepository.deleteById(id); }
+
+    public TipoAcesso findById(int id){return tipoAcessoRepository.findById(id).orElse(null); }
 }

@@ -20,7 +20,13 @@ public class UsuarioService {
         return usuarioRepository.save(usuario);
     }
 
+    public Usuario atualizar(Usuario usuario){return usuarioRepository.save(usuario);}
+
     public List<Usuario> findAll() {
         return usuarioRepository.findAll();
     }
+
+    public Usuario findById(int id){return usuarioRepository.findById(id).orElse(null);}
+
+    public void deleteById(int id){usuarioRepository.deleteById(id);}
 }

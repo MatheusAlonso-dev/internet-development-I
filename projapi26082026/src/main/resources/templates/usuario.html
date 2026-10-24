@@ -1,0 +1,209 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Usuários | Meu Sistema</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<header class="cabecalho">
+    <div class="container menu">
+        <a th:href="@{/}" class="logo">Meu Sistema</a>
+
+        <nav>
+            <a th:href="@{/}" class="link-menu">Início</a>
+            <a th:href="@{/#cadastros}" class="link-menu">Cadastros</a>
+            <a th:href="@{/telas/usuarios}" class="link-menu ativo">Usuários</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+
+    <section class="apresentacao">
+        <span class="etiqueta">Cadastros</span>
+        <h1>Usuários</h1>
+        <p>Cadastre, consulte, edite e exclua os usuários registrados no sistema.</p>
+    </section>
+
+    <div th:if="${mensagem}" class="mensagem-sucesso"
+         th:text="${mensagem}"></div>
+
+    <section class="painel-formulario">
+
+        <div class="titulo-secao">
+            <h2 th:text="${editando} ? 'Editar usuário' : 'Novo usuário'">
+                Novo usuário
+            </h2>
+
+            <p th:if="${editando}">
+                Preencha os campos abaixo para editar o usuário.
+            </p>
+        </div>
+
+        <form th:action="${editando} ?
+                @{/telas/usuarios/atualizar/{id}(id=${usuarioEditar.id})} :
+                @{/telas/usuarios/salvar}"
+              method="post"
+              class="formulario">
+
+            <div class="campo">
+                <label for="usuario">Usuário</label>
+
+                <input type="text"
+                       id="usuario"
+                       name="usuario"
+                       placeholder="Digite o nome de usuário"
+                       th:value="${editando} ? ${usuarioEditar.usuario} : ''"
+                       required>
+            </div>
+
+            <div class="campo">
+                <label for="senha">Senha</label>
+
+                <input type="password"
+                       id="senha"
+                       name="senha"
+                       placeholder="Digite a senha"
+                       th:value="${editando} ? ${usuarioEditar.senha} : ''"
+                       required>
+            </div>
+
+            <div class="campo">
+                <label for="tipoAcessoId">Tipo de acesso</label>
+
+                <select id="tipoAcessoId" name="tipoAcessoId" required>
+                    <option value="">Selecione um tipo de acesso</option>
+
+                    <option th:each="tipo : ${tiposAcesso}"
+                            th:value="${tipo.id}"
+                            th:text="${tipo.descricao}"
+                            th:selected="${editando and usuarioEditar.tipoAcesso != null and usuarioEditar.tipoAcesso.id == tipo.id}">
+                    </option>
+                </select>
+            </div>
+
+            <div class="acoes-formulario">
+
+                <button type="submit"
+                        class="botao"
+                        th:text="${editando} ? 'Atualizar usuário' : 'Cadastrar usuário'">
+                    Cadastrar usuário
+                </button>
+
+                <a th:if="${editando}"
+                   th:href="@{/telas/usuarios}"
+                   class="botao botao-secundario">
+                    Cancelar
+                </a>
+
+                <button th:if="${!editando}"
+                        type="reset"
+                        class="botao botao-secundario">
+                    Limpar
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+    <section class="painel-tabela">
+
+        <div class="titulo-secao">
+            <h2>Usuários cadastrados</h2>
+            <p>Lista de usuários registrados no sistema.</p>
+        </div>
+
+        <table class="tabela">
+
+            <colgroup>
+                <col style="width: 10%">
+                <col style="width: 25%">
+                <col style="width: 25%">
+                <col style="width: 20%">
+                <col style="width: 20%">
+            </colgroup>
+
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Usuário</th>
+                <th>Data de cadastro</th>
+                <th>Tipo de acesso</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr th:each="usuario : ${usuarios}">
+
+                <td th:text="${usuario.id}">1</td>
+
+                <td th:text="${usuario.usuario}">matheus</td>
+
+                <td th:text="${usuario.dataCadastro != null ?
+                        #dates.format(usuario.dataCadastro, 'dd/MM/yyyy') : ''}">
+                </td>
+
+                <td th:text="${usuario.tipoAcesso != null ?
+                        usuario.tipoAcesso.descricao : ''}">
+                </td>
+
+                <td>
+                    <div class="acoes-tabela">
+
+                        <a th:href="@{/telas/usuarios/editar/{id}(id=${usuario.id})}"
+                           class="botao botao-editar">
+                            Editar
+                        </a>
+
+                        <form th:action="@{/telas/usuarios/excluir/{id}(id=${usuario.id})}"
+                              method="post"
+                              class="form-excluir">
+
+                            <button type="submit"
+                                    class="botao botao-excluir">
+                                Excluir
+                            </button>
+
+                        </form>
+
+                    </div>
+                </td>
+
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(usuarios)}">
+                <td colspan="5" class="mensagem-vazia">
+                    Nenhum usuário cadastrado.
+                </td>
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+    <div class="voltar">
+        <a th:href="@{/}" class="link-voltar">
+            ← Voltar para a página inicial
+        </a>
+    </div>
+
+</main>
+
+<footer class="rodape">
+    <div class="container">
+        <p>Meu Sistema — Gerenciamento de cadastros</p>
+    </div>
+</footer>
+
+</body>
+</html>
