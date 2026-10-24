@@ -1,0 +1,183 @@
+
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Serviços | Meu Sistema</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<header class="cabecalho">
+    <div class="container menu">
+        <a th:href="@{/}" class="logo">Meu Sistema</a>
+
+        <nav>
+            <a th:href="@{/}" class="link-menu">Início</a>
+            <a th:href="@{/#cadastros}" class="link-menu">Cadastros</a>
+            <a th:href="@{/telas/servicos}" class="link-menu ativo">Serviços</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+
+    <section class="apresentacao">
+        <span class="etiqueta">Cadastros</span>
+        <h1>Serviços</h1>
+        <p>
+            Cadastre, consulte, edite e exclua os serviços registrados no sistema.
+        </p>
+    </section>
+
+    <div
+            th:if="${mensagem}"
+            class="mensagem-sucesso"
+            th:text="${mensagem}">
+    </div>
+
+    <section class="painel-formulario">
+        <div class="titulo-secao">
+            <h2 th:text="${editando} ? 'Editar serviço' : 'Novo serviço'">Novo serviço</h2>
+            <p th:if="${editando}">Preencha os campos abaixo para editar o serviço.</p>
+        </div>
+
+        <form
+                th:action="${editando} ?
+                @{/telas/servicos/atualizar/{id}(id=${servicoEditar.id})} :
+                @{/telas/servicos/salvar}"
+                method="post"
+                class="formulario">
+
+            <div class="campo">
+                <label for="nome">Nome do serviço</label>
+                <input
+                        type="text"
+                        id="nome"
+                        name="nome"
+                        placeholder="Ex.: Consulta"
+                        th:value="${editando} ? ${servicoEditar.nome} : ''"
+                        required>
+            </div>
+
+            <div class="campo">
+                <label for="valor">Valor (R$)</label>
+                <input
+                        type="number"
+                        id="valor"
+                        name="valor"
+                        placeholder="Ex.: 150,00"
+                        step="0.01"
+                        min="0"
+                        th:value="${editando} ? ${servicoEditar.valor} : ''"
+                        required>
+            </div>
+
+            <div class="acoes-formulario">
+                <button
+                        type="submit"
+                        class="botao"
+                        th:text="${editando} ? 'Atualizar serviço' : 'Cadastrar serviço'">
+                    Cadastrar serviço
+                </button>
+
+                <a
+                        th:if="${editando}"
+                        th:href="@{/telas/servicos}"
+                        class="botao botao-secundario">
+                    Cancelar
+                </a>
+
+                <button
+                        th:if="${!editando}"
+                        type="reset"
+                        class="botao botao-secundario">
+                    Limpar
+                </button>
+            </div>
+
+        </form>
+    </section>
+
+    <section class="painel-tabela">
+        <div class="titulo-secao">
+            <h2>Serviços cadastrados</h2>
+            <p>Lista de serviços registrados no sistema.</p>
+        </div>
+
+        <table class="tabela">
+
+            <colgroup>
+                <col style="width: 10%">
+                <col style="width: 50%">
+                <col style="width: 20%">
+                <col style="width: 20%">
+            </colgroup>
+
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Valor</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr th:each="servico : ${servicos}">
+                <td th:text="${servico.id}">1</td>
+                <td th:text="${servico.nome}">Consulta</td>
+                <td th:text="${#numbers.formatDecimal(servico.valor, 1, 2)}">150,00</td>
+
+                <td>
+                    <div class="acoes-tabela">
+                        <a
+                                th:href="@{/telas/servicos/editar/{id}(id=${servico.id})}"
+                                class="botao botao-editar">
+                            Editar
+                        </a>
+
+                        <form
+                                th:action="@{/telas/servicos/excluir/{id}(id=${servico.id})}"
+                                method="post"
+                                class="form-excluir">
+
+                            <button
+                                    type="submit"
+                                    class="botao botao-excluir">
+                                Excluir
+                            </button>
+                        </form>
+                    </div>
+                </td>
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(servicos)}">
+                <td colspan="4" class="mensagem-vazia">
+                    Nenhum serviço cadastrado.
+                </td>
+            </tr>
+
+            </tbody>
+        </table>
+    </section>
+
+    <div class="voltar">
+        <a th:href="@{/}" class="link-voltar">
+            ← Voltar para a página inicial
+        </a>
+    </div>
+
+</main>
+
+<footer class="rodape">
+    <div class="container">
+        <p>Meu Sistema — Gerenciamento de cadastros</p>
+    </div>
+</footer>
+
+</body>
+</html>
