@@ -20,7 +20,13 @@ public class AgendaService {
         return agendaRepository.save(agenda);
     }
 
+    public Agenda atualizar(Agenda agenda){return agendaRepository.save(agenda);}
+
     public List<Agenda> findAll() {
         return agendaRepository.findAll();
     }
+
+    public Agenda findById(int id){return agendaRepository.findById(id).orElse(null);}
+
+    public void deleteById(int id){agendaRepository.deleteById(id);}
 }

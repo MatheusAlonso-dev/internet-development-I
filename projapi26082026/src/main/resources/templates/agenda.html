@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Agendas | Meu Sistema</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<header class="cabecalho">
+    <div class="container menu">
+        <a th:href="@{/}" class="logo">Meu Sistema</a>
+
+        <nav>
+            <a th:href="@{/}" class="link-menu">Início</a>
+            <a th:href="@{/#cadastros}" class="link-menu">Cadastros</a>
+            <a th:href="@{/telas/agendas}" class="link-menu ativo">Agendas</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+
+    <section class="apresentacao">
+        <span class="etiqueta">Cadastros</span>
+        <h1>Agendas</h1>
+        <p>Cadastre, consulte, edite e exclua os agendamentos registrados no sistema.</p>
+    </section>
+
+    <div th:if="${mensagem}" class="mensagem-sucesso"
+         th:text="${mensagem}"></div>
+
+    <section class="painel-formulario">
+
+        <div class="titulo-secao">
+            <h2 th:text="${editando} ? 'Editar agenda' : 'Nova agenda'">
+                Nova agenda
+            </h2>
+
+            <p th:if="${editando}">
+                Preencha os campos abaixo para editar a agenda.
+            </p>
+        </div>
+
+        <form th:action="${editando} ?
+                @{/telas/agendas/atualizar/{id}(id=${agendaEditar.id})} :
+                @{/telas/agendas/salvar}"
+              method="post"
+              class="formulario">
+
+            <div class="campo">
+                <label for="descricao">Descrição</label>
+
+                <input type="text"
+                       id="descricao"
+                       name="descricao"
+                       placeholder="Digite a descrição do agendamento"
+                       th:value="${editando} ? ${agendaEditar.descricao} : ''"
+                       required>
+            </div>
+
+            <div class="campo">
+                <label for="data">Data</label>
+
+                <input type="date"
+                       id="data"
+                       name="data"
+                       th:value="${editando and agendaEditar.data != null ? #dates.format(agendaEditar.data, 'yyyy-MM-dd') : ''}"
+                       required>
+            </div>
+
+            <div class="campo">
+                <label for="servicoId">Serviço</label>
+
+                <select id="servicoId"
+                        name="servicoId"
+                        required>
+
+                    <option value="">Selecione um serviço</option>
+
+                    <option th:each="servico : ${servicos}"
+                            th:value="${servico.id}"
+                            th:text="${servico.nome}"
+                            th:selected="${editando and agendaEditar.servico != null and agendaEditar.servico.id == servico.id}">
+                    </option>
+
+                </select>
+            </div>
+
+            <div class="campo">
+                <label for="clienteId">Cliente</label>
+
+                <select id="clienteId"
+                        name="clienteId"
+                        required>
+
+                    <option value="">Selecione um cliente</option>
+
+                    <option th:each="cliente : ${clientes}"
+                            th:value="${cliente.id}"
+                            th:text="${cliente.nome}"
+                            th:selected="${editando and agendaEditar.cliente != null and agendaEditar.cliente.id == cliente.id}">
+                    </option>
+
+                </select>
+            </div>
+
+            <div class="campo">
+                <label for="usuarioId">Usuário responsável</label>
+
+                <select id="usuarioId"
+                        name="usuarioId"
+                        required>
+
+                    <option value="">Selecione um usuário</option>
+
+                    <option th:each="usuario : ${usuarios}"
+                            th:value="${usuario.id}"
+                            th:text="${usuario.usuario}"
+                            th:selected="${editando and agendaEditar.usuario != null and agendaEditar.usuario.id == usuario.id}">
+                    </option>
+
+                </select>
+            </div>
+
+            <div class="acoes-formulario">
+
+                <button type="submit"
+                        class="botao"
+                        th:text="${editando} ? 'Atualizar agenda' : 'Cadastrar agenda'">
+                    Cadastrar agenda
+                </button>
+
+                <a th:if="${editando}"
+                   th:href="@{/telas/agendas}"
+                   class="botao botao-secundario">
+                    Cancelar
+                </a>
+
+                <button th:if="${!editando}"
+                        type="reset"
+                        class="botao botao-secundario">
+                    Limpar
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+    <section class="painel-tabela">
+
+        <div class="titulo-secao">
+            <h2>Agendas cadastradas</h2>
+            <p>Lista de agendamentos registrados no sistema.</p>
+        </div>
+
+        <table class="tabela">
+
+            <colgroup>
+                <col style="width: 6%">
+                <col style="width: 18%">
+                <col style="width: 17%">
+                <col style="width: 17%">
+                <col style="width: 17%">
+                <col style="width: 15%">
+                <col style="width: 10%">
+            </colgroup>
+
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Descrição</th>
+                <th>Data</th>
+                <th>Serviço</th>
+                <th>Cliente</th>
+                <th>Usuário</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr th:each="agenda : ${agendas}">
+
+                <td th:text="${agenda.id}">1</td>
+
+                <td th:text="${agenda.descricao}">Agendamento</td>
+
+                <td th:text="${agenda.data != null ?
+                        #dates.format(agenda.data, 'dd/MM/yyyy') : ''}">
+                </td>
+
+                <td th:text="${agenda.servico != null ?
+                        agenda.servico.nome : ''}">
+                </td>
+
+                <td th:text="${agenda.cliente != null ?
+                        agenda.cliente.nome : ''}">
+                </td>
+
+                <td th:text="${agenda.usuario != null ?
+                        agenda.usuario.usuario : ''}">
+                </td>
+
+                <td>
+                    <div class="acoes-tabela">
+
+                        <a th:href="@{/telas/agendas/editar/{id}(id=${agenda.id})}"
+                           class="botao botao-editar">
+                            Editar
+                        </a>
+
+                        <form th:action="@{/telas/agendas/excluir/{id}(id=${agenda.id})}"
+                              method="post"
+                              class="form-excluir">
+
+                            <button type="submit"
+                                    class="botao botao-excluir">
+                                Excluir
+                            </button>
+
+                        </form>
+
+                    </div>
+                </td>
+
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(agendas)}">
+                <td colspan="7" class="mensagem-vazia">
+                    Nenhuma agenda cadastrada.
+                </td>
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+    <div class="voltar">
+        <a th:href="@{/}" class="link-voltar">
+            ← Voltar para a página inicial
+        </a>
+    </div>
+
+</main>
+
+<footer class="rodape">
+    <div class="container">
+        <p>Meu Sistema — Gerenciamento de cadastros</p>
+    </div>
+</footer>
+
+</body>
+</html>
