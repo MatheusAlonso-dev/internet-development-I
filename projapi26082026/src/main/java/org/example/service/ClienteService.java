@@ -23,4 +23,10 @@ public class ClienteService {
     public List<Cliente> findAll() {
         return clienteRepository.findAll();
     }
+
+    public Cliente findById(int id){return clienteRepository.findById(id).orElse(null);}
+
+    public Cliente atualizar(Cliente cliente){return clienteRepository.save(cliente);}
+
+    public void deleteById(int id){clienteRepository.deleteById(id);}
 }

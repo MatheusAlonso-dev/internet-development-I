@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Clientes | Meu Sistema</title>
+    <link rel="stylesheet" th:href="@{/css/style.css}">
+</head>
+
+<body>
+
+<header class="cabecalho">
+    <div class="container menu">
+        <a th:href="@{/}" class="logo">Meu Sistema</a>
+
+        <nav>
+            <a th:href="@{/}" class="link-menu">Início</a>
+            <a th:href="@{/#cadastros}" class="link-menu">Cadastros</a>
+            <a th:href="@{/telas/clientes}" class="link-menu ativo">Clientes</a>
+        </nav>
+    </div>
+</header>
+
+<main class="container">
+
+    <section class="apresentacao">
+        <span class="etiqueta">Cadastros</span>
+        <h1>Clientes</h1>
+        <p>Cadastre, consulte, edite e exclua os clientes registrados no sistema.</p>
+    </section>
+
+    <div th:if="${mensagem}" class="mensagem-sucesso"
+         th:text="${mensagem}"></div>
+
+    <section class="painel-formulario">
+
+        <div class="titulo-secao">
+            <h2 th:text="${editando} ? 'Editar cliente' : 'Novo cliente'">
+                Novo cliente
+            </h2>
+
+            <p th:if="${editando}">
+                Preencha os campos abaixo para editar o cliente.
+            </p>
+        </div>
+
+        <form th:action="${editando} ?
+                @{/telas/clientes/atualizar/{id}(id=${clienteEditar.id})} :
+                @{/telas/clientes/salvar}"
+              method="post"
+              class="formulario">
+
+            <div class="campo">
+                <label for="nome">Nome</label>
+
+                <input type="text"
+                       id="nome"
+                       name="nome"
+                       placeholder="Digite o nome do cliente"
+                       th:value="${editando} ? ${clienteEditar.nome} : ''"
+                       required>
+            </div>
+
+            <div class="campo">
+                <label for="telefone">Telefone</label>
+
+                <input type="text"
+                       id="telefone"
+                       name="telefone"
+                       placeholder="Digite o telefone"
+                       th:value="${editando} ? ${clienteEditar.telefone} : ''"
+                       required>
+            </div>
+
+            <div class="campo">
+                <label for="email">E-mail</label>
+
+                <input type="email"
+                       id="email"
+                       name="email"
+                       placeholder="Digite o e-mail"
+                       th:value="${editando} ? ${clienteEditar.email} : ''"
+                       required>
+            </div>
+
+            <div class="campo">
+                <label for="enderecoId">Endereço</label>
+
+                <select id="enderecoId"
+                        name="enderecoId"
+                        required>
+
+                    <option value="">Selecione um endereço</option>
+
+                    <option th:each="endereco : ${enderecos}"
+                            th:value="${endereco.id}"
+                            th:text="${endereco.logradouro + ', ' + endereco.numero + ' - ' + endereco.cidade}"
+                            th:selected="${editando and clienteEditar.endereco != null and clienteEditar.endereco.id == endereco.id}">
+                    </option>
+
+                </select>
+            </div>
+
+            <div class="acoes-formulario">
+
+                <button type="submit"
+                        class="botao"
+                        th:text="${editando} ? 'Atualizar cliente' : 'Cadastrar cliente'">
+                    Cadastrar cliente
+                </button>
+
+                <a th:if="${editando}"
+                   th:href="@{/telas/clientes}"
+                   class="botao botao-secundario">
+                    Cancelar
+                </a>
+
+                <button th:if="${!editando}"
+                        type="reset"
+                        class="botao botao-secundario">
+                    Limpar
+                </button>
+
+            </div>
+
+        </form>
+
+    </section>
+
+    <section class="painel-tabela">
+
+        <div class="titulo-secao">
+            <h2>Clientes cadastrados</h2>
+            <p>Lista de clientes registrados no sistema.</p>
+        </div>
+
+        <table class="tabela">
+
+            <colgroup>
+                <col style="width: 8%">
+                <col style="width: 20%">
+                <col style="width: 17%">
+                <col style="width: 20%">
+                <col style="width: 20%">
+                <col style="width: 15%">
+            </colgroup>
+
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Telefone</th>
+                <th>E-mail</th>
+                <th>Endereço</th>
+                <th>Ações</th>
+            </tr>
+            </thead>
+
+            <tbody>
+
+            <tr th:each="cliente : ${clientes}">
+
+                <td th:text="${cliente.id}">1</td>
+
+                <td th:text="${cliente.nome}">Nome do cliente</td>
+
+                <td th:text="${cliente.telefone}">(00) 00000-0000</td>
+
+                <td th:text="${cliente.email}">email@exemplo.com</td>
+
+                <td th:text="${cliente.endereco != null ?
+                        cliente.endereco.logradouro + ', ' +
+                        cliente.endereco.numero + ' - ' +
+                        cliente.endereco.cidade : ''}">
+                </td>
+
+                <td>
+                    <div class="acoes-tabela">
+
+                        <a th:href="@{/telas/clientes/editar/{id}(id=${cliente.id})}"
+                           class="botao botao-editar">
+                            Editar
+                        </a>
+
+                        <form th:action="@{/telas/clientes/excluir/{id}(id=${cliente.id})}"
+                              method="post"
+                              class="form-excluir">
+
+                            <button type="submit"
+                                    class="botao botao-excluir">
+                                Excluir
+                            </button>
+
+                        </form>
+
+                    </div>
+                </td>
+
+            </tr>
+
+            <tr th:if="${#lists.isEmpty(clientes)}">
+                <td colspan="6" class="mensagem-vazia">
+                    Nenhum cliente cadastrado.
+                </td>
+            </tr>
+
+            </tbody>
+
+        </table>
+
+    </section>
+
+    <div class="voltar">
+        <a th:href="@{/}" class="link-voltar">
+            ← Voltar para a página inicial
+        </a>
+    </div>
+
+</main>
+
+<footer class="rodape">
+    <div class="container">
+        <p>Meu Sistema — Gerenciamento de cadastros</p>
+    </div>
+</footer>
+
+</body>
+</html>
